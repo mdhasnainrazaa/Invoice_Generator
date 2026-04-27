@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: receipt-generator-server
+    env: node
+    plan: free
+    buildCommand: npm install --workspace=server
+    startCommand: npm start --workspace=server
+    rootDir: .
+
+  - type: static
+    name: receipt-generator-client
+    env: static
+    plan: free
+    buildCommand: npm install && npm run build --workspace=client
+    staticPublishPath: client/dist
+    rootDir: .
