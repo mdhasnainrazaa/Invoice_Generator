@@ -7,7 +7,7 @@ services:
     startCommand: npm start --workspace=server
     rootDir: .
 
-  - type: static
+  - type: web
     name: receipt-generator-client
     env: static
     plan: free
