@@ -10,7 +10,6 @@ services:
   - type: web
     name: receipt-generator-client
     env: static
-    plan: free
     buildCommand: npm install && npm run build --workspace=client
     staticPublishPath: client/dist
     rootDir: .
