@@ -1,13 +1,14 @@
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import logo from "../assets/logo.png";
+
 
 export default function Preview({ data }) {
   const year = new Date().getFullYear();
   const receiptNo = `${data.prefix || "KTC"}-${year}-001${data.suffix ? "-" + data.suffix : ""}`;
 
-  const total =
-    Number(data.amount || 0) - Number(data.discount || 0);
+  const totalAmount = Number(data.totalAmount || 0);
+  const paidAmount = Number(data.paidAmount || 0);
+  const dueAmount = totalAmount - paidAmount;
 
   const downloadPDF = async () => {
     const element = document.getElementById("receipt");
@@ -38,7 +39,7 @@ export default function Preview({ data }) {
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <img src={logo} alt="Logo" className="w-56 object-contain" />
+              <img src="/logo.jpeg" alt="Logo" className="w-56 object-contain" />
             </div>
           </div>
           <div className="text-right">
@@ -61,32 +62,30 @@ export default function Preview({ data }) {
 
         <div className="space-y-2 text-sm text-gray-700">
           <div className="flex justify-between border-b border-gray-100 pb-1">
-            <span>Subtotal</span>
-            <span>₹ {Number(data.amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+            <span>Total Amount</span>
+            <span>₹ {totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
           </div>
           <div className="flex justify-between border-b border-gray-100 pb-1">
-            <span>Discount</span>
-            <span>₹ {Number(data.discount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-          </div>
-          <div className="flex justify-between border-b border-gray-100 pb-1">
-            <span>Tax (0%)</span>
-            <span>₹ 0.00</span>
+            <span>Amount Paid</span>
+            <span className="text-green-600">₹ {paidAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
           </div>
           <div className="flex justify-between font-bold text-base pt-2">
-            <span>Total Amount</span>
-            <span>₹ {total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+            <span>Balance Due</span>
+            <span className={dueAmount > 0 ? "text-red-600" : "text-gray-800"}>₹ {dueAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
           </div>
         </div>
 
         <div className="mt-4 bg-[#0a192f] p-3 rounded-md flex justify-between items-center">
-          <span className="text-white font-bold">Amount Paid</span>
-          <span className="text-green-500 font-bold text-lg">₹ {total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+          <span className="text-white font-bold">Transaction Status</span>
+          <span className={`font-bold text-lg ${dueAmount === 0 ? "text-green-500" : "text-yellow-500"}`}>
+            {dueAmount === 0 ? "FULLY PAID" : "PARTIALLY PAID"}
+          </span>
         </div>
 
         <hr className="my-4" />
 
         <p><b>Payment Mode:</b> {data.paymentMode}</p>
-        <p><b>Reference:</b> {data.reference}</p>
+        {data.paymentMode !== 'Due' && <p><b>Transaction ID:</b> {data.transactionId}</p>}
 
         <p className="text-xs text-center mt-4">
           This is a system-generated receipt
@@ -102,7 +101,7 @@ export default function Preview({ data }) {
 
         <div className="mt-6 p-4 bg-blue-50 rounded-lg flex items-center gap-4 border border-blue-100">
           <div className="flex-shrink-0">
-            <img src={logo} alt="Logo" className="w-20 object-contain" />
+            <img src="/logo.jpeg" alt="Logo" className="w-20 object-contain" />
           </div>
           <div>
             <p className="text-sm text-blue-900">Thank you for choosing Kodetocareer.</p>

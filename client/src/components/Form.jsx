@@ -6,10 +6,10 @@ export default function Form({ setData }) {
     suffix: Math.floor(1000 + Math.random() * 9000).toString(),
     name: "",
     course: "",
-    amount: "",
-    discount: "",
+    totalAmount: "",
+    paidAmount: "",
     paymentMode: "",
-    reference: "",
+    transactionId: "",
   });
 
   const handleChange = (e) => {
@@ -29,16 +29,17 @@ export default function Form({ setData }) {
       <input name="name" placeholder="Student Name" className="input" onChange={handleChange} />
       <input name="course" placeholder="Course" className="input" onChange={handleChange} />
 
-      <input name="amount" placeholder="Amount" className="input" onChange={handleChange} />
-      <input name="discount" placeholder="Discount" className="input" onChange={handleChange} />
+      <input name="totalAmount" placeholder="Total Amount" className="input" onChange={handleChange} />
+      <input name="paidAmount" placeholder="Paid Amount" className="input" onChange={handleChange} />
 
       <select name="paymentMode" className="input" onChange={handleChange}>
-        <option>Payment Mode</option>
-        <option>UPI</option>
-        <option>Card</option>
+        <option value="">Select Payment Mode</option>
+        <option value="UPI">UPI</option>
+        <option value="Card">Card</option>
+        <option value="Due">Due Payment</option>
       </select>
 
-      <input name="reference" placeholder="Reference ID" className="input" onChange={handleChange} />
+      <input name="transactionId" placeholder="Transaction ID" className="input" onChange={handleChange} />
 
       <button
         onClick={handleGenerate}
